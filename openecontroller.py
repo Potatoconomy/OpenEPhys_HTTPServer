@@ -69,17 +69,27 @@ class myClient:
                              "record_engine":"BINARY",
                              "recording_number":0}]}
         """
+
+
+
+        """
+        SETS THE NEW GLOBAL RECORDING PARAMETERS
+        """
+
         data_ = {"append_text": "",
                  "base_text": self.record_path,
                  "default_record_engine": "BINARY",
                  "parent_directory": self.parent_dir,
-                 "prepend_text": "",
+                 "prepend_text": ""}
+
+        """
                  "record_nodes": [{"experiment_number": "1",
                                    "is_synchronized": "true",
                                    "node_id": 106,
                                    "parent_directory": self.parent_dir,
                                    "record_engine": "BINARY",
                                    "recording_number": 0}]}
+        """
 
         json_object = json.dumps(data_)
         print("\njson object:\n %s" % json_object)
@@ -90,5 +100,26 @@ class myClient:
 
         r = requests.get(self.recording_url)
         print("recording_URL_GET:\n %s" % r.json())
-        return r
 
+
+        """
+        SET EXISTING RECORD NODE PARAMATERS
+        """ 
+
+        data_ = {
+            "parent_directory" : "/Users/nes/Documents/Open Ephys",
+            "record_engine" : "BINARY"}
+
+
+        # Need to update the URL to include the RecordNode ID
+        record_node_url = self.recording_url + "/106"
+
+        json_object = json.dumps(data_)
+        r = requests.put(record_node_url, data=json_object)
+
+        print(r) # prints 200 -- valid PUT
+
+        r = requests.get(self.recording_url)
+        print("recording_URL_GET:\n %s" % r.json())
+
+        return r
